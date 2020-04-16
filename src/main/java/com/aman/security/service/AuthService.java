@@ -31,8 +31,4 @@ public class AuthService {
         String token = jwtTokenProvider.generateToken(payload.getEmail());
         return authMapper.doMap(payload.getEmail(), token);
     }
-
-    public void createAccount(AccountCreateRequestDTO payload) {
-
-    }
 }
