@@ -1,11 +1,8 @@
 package com.aman.security.component;
 
 import com.aman.security.constant.SecurityConstant;
-import com.aman.security.exception.SecurityException;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.JwtException;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import com.aman.security.exception.AuthSecurityException;
+import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -66,7 +63,7 @@ public class JwtTokenProvider {
             Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
             return true;
         } catch (JwtException | IllegalArgumentException ex) {
-            throw new SecurityException("Invalid JWT token", ex);
+            throw new AuthSecurityException("Invalid JWT token", ex);
         }
     }
 

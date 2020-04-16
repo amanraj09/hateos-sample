@@ -12,6 +12,7 @@ import org.springframework.util.StringUtils;
 
 import java.sql.PreparedStatement;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Repository
@@ -67,16 +68,6 @@ public class CarRepository {
         return jdbcTemplate.query(query, new Object[] { id }, new CarMapper()).stream().findFirst().orElse(null);
     }
 
-    public List<Car> getCarByQuery(String query, String searchText) {
-        return jdbcTemplate.query(
-                query,
-                new Object[] {
-                        searchText, searchText, searchText, searchText, searchText
-                },
-                new CarMapper()
-        );
-    }
-
     public Boolean update(Car existingCar, UpdateCarRequestDTO payload) {
         boolean isUpdateRequested = false;
         List<Object> queryArguments = new ArrayList<>();
@@ -120,5 +111,22 @@ public class CarRepository {
     public Boolean deleteById(Integer id) {
         String query = "delete from car where id = ?";
         return jdbcTemplate.update(query, id) > 0;
+    }
+
+    public List<Car> searchCar(int limit, int page, String searchText) {
+        String query = null;
+        List<Object> queryArguments = new ArrayList<>();
+        if(!StringUtils.isEmpty(searchText)) {
+            searchText = searchText.trim();
+            query = getSearchQuery(limit, page);
+            queryArguments.addAll(Arrays.asList(searchText, searchText, searchText, searchText, searchText));
+        } else {
+            query = getBaseQuery(limit, page);
+        }
+        return jdbcTemplate.query(
+                query,
+                queryArguments.stream().toArray(Object[]::new),
+                new CarMapper()
+        );
     }
 }

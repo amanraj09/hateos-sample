@@ -62,14 +62,7 @@ public class CarService {
 
         limit = limit == null ? CarConstant.ApiDefaultConstants.DEFAULT_LIMIT : limit;
         page = page == null ? CarConstant.ApiDefaultConstants.DEFAULT_PAGE : page;
-        String baseQuery = carRepository.getBaseQuery(limit, page);
-
-        if(!searchText.isEmpty()) {
-            searchText = searchText.trim();
-            baseQuery = carRepository.getSearchQuery(limit, page);
-        }
-
-        List<Car> cars = carRepository.getCarByQuery(baseQuery, searchText);
+        List<Car> cars = carRepository.searchCar(limit, page , searchText);
         if(CollectionUtils.isEmpty(cars)) {
             return Arrays.asList();
         }

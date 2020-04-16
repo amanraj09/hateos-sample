@@ -48,7 +48,7 @@ public class CarController {
                             linkTo(
                                     methodOn(
                                             this.getClass()
-                                    ).getAllCars(searchText, limit, page + 1)
+                                    ).getAllCars(searchText, limit == null ? 0 : limit, page == null ? 0 :  page + 1)
                             ).withSelfRel()
                     );
                 } catch (EntityNotFoundException e) {
@@ -68,16 +68,16 @@ public class CarController {
         return ResponseEntity.ok(carResponseDTO);
     }
 
-    @PutMapping("{carId}")
-    public ResponseEntity updateCar(@PathVariable("carId") Integer id, @RequestBody UpdateCarRequestDTO payload)
+    @PutMapping("{id}")
+    public ResponseEntity updateCar(@PathVariable("id") Integer id, @RequestBody UpdateCarRequestDTO payload)
             throws EntityNotFoundException {
         CarResponseDTO carResponseDTO = carService.updateCar(id, payload);
         carResponseDTO.add(linkTo(methodOn(this.getClass()).getCar(id)).withSelfRel());
         return ResponseEntity.ok(carResponseDTO);
     }
 
-    @DeleteMapping("{carId}")
-    public ResponseEntity deleteCar(@PathVariable("carId") Integer id)
+    @DeleteMapping("{id}")
+    public ResponseEntity deleteCar(@PathVariable("id") Integer id)
             throws EntityNotFoundException {
         return ResponseEntity.ok(carService.deleteCar(id));
     }
